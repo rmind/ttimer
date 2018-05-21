@@ -105,18 +105,20 @@ ttimer_start(ttimer_t *timer, ttimer_ref_t *ent, time_t timeout)
 	/*
 	 * The algorithm to find the target bucket and the remaining
 	 * time is conceptually the same with the digital clock time.
-	 * Consider 22:58:57 i.e. 2 min and 3 sec before midnight and
-	 * adding, e.g. 192 seconds to it which would be 23:02:09:
+	 *
+	 * As an example, let the current time be 22:58:57 i.e. 2 min
+	 * and 3 sec before midnight.  Now consider adding 192 seconds
+	 * to it.  It would result in 23:02:09.  The logic being:
 	 *
 	 * L0 (seconds): (57 + 192) div 60 = 4 rem 9
 	 * L1 (minutes): (58 + 4) div 60 = 1 rem 2
 	 * L2 (hours): (22 + 1) div 24 = 0 rem 23
 	 *
-	 * Hence, the level to insert is L2 because because we reached
-	 * zero and the bucket is 23.  The remaining time is a sum of
-	 * the previous remainders: 9 + (2 * 60) = 129.  In other words,
-	 * once the clock will reach 23:00:00, there will be 129 seconds
-	 * remaining until 23:02:09.
+	 * Hence, the level to insert is L2 (because we reached zero)
+	 * and the bucket to insert is 23 (the remainder).  The remaining
+	 * time is a sum of the previous remainders: 9 + (2 * 60) = 129.
+	 * In other words, once the clock will reach 23:00:00, there will
+	 * be 129 seconds remaining until 23:02:09.
 	 *
 	 * Our timing wheel has 256 units, therefore the time before
 	 * "midnight" is 255:255:255 and we divide and modulus by 256.
@@ -141,7 +143,7 @@ next:
 		}
 
 		/*
-		 * If we we reach the final level, just add the whole
+		 * If we reach the final level, just add the whole
 		 * remaining time.
 		 */
 		ent->remaining += multiplier * (timeout - 1);
