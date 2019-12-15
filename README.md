@@ -61,6 +61,6 @@ time units can be used with the API as long as they can be represented by
 the `time_t` type.  Internally, the mechanism does not assume UNIX time.
 
 This is a tick-based mechanism and the accuracy, as well as the granularity,
-depends on the tick period.  Depending on the use case case, for an optimal
+depends on the tick period.  Depending on the use case, for an optimal
 tick rate, you might want to consider using the
 [Nyquist frequency](https://en.wikipedia.org/wiki/Nyquist_frequency).
